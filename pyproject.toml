@@ -10,6 +10,8 @@ peewee = "^3.15.0"
 psycopg2-binary = "^2.9.3"
 pytest = "^7.1.2"
 environs = "^9.5.0"
+fastapi = "^0.79.0"
+uvicorn = "^0.18.2"
 
 [tool.poetry.dev-dependencies]
 
