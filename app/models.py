@@ -20,9 +20,16 @@ class Product(Model):
     class Meta:
         database = db
 
+class Payment(Model):
+    product = ForeignKeyField(Product, verbose_name='продукт', backref='products')
+    date_time = DateTimeField(verbose_name='дата и время платежа')
+    is_paid = BooleanField(verbose_name='оплачено или нет')
+
+    class Meta:
+        database = db
 
 if __name__ == '__main__':
-    db.create_tables([Product])
+    db.create_tables([Product, Payment])
 
     product1 = Product(name='Mars', type='Chocolate bar', image_url='', price=3.2)
     product1.save()
