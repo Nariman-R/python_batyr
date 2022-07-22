@@ -1,40 +1,28 @@
 from peewee import *
-from environs import Env
 
-environment = Env()
-environment.read_env()
-
-DB_NAME = environment('DB_NAME')
-DB_URI =  environment('DB_URI')
-
-db = PostgresqlDatabase(database=DB_NAME, dsn=DB_URI)
-db.connect()
+from app.dependencies import get_db
 
 
-class Product(Model):
-    name = CharField(verbose_name='наименование')
-    type = CharField(verbose_name='категория')
-    image_url = CharField(verbose_name='адрес изображения')
-    price = DecimalField(verbose_name='стоимость')
-
+class Item(Model):
+    title = CharField(verbose_name='title')
+    price = DecimalField(verbose_name='price')
+    category = CharField(verbose_name='category')
+    image_url = CharField(verbose_name='image')
+    description = CharField(verbose_name='description')
+    
     class Meta:
-        database = db
+        database = get_db()
 
 class Payment(Model):
-    product = ForeignKeyField(Product, verbose_name='продукт', backref='products')
-    date_time = DateTimeField(verbose_name='дата и время платежа')
-    is_paid = BooleanField(verbose_name='оплачено или нет')
+    item = ForeignKeyField(Item, verbose_name='item', backref='items')
+    date = DateTimeField(verbose_name='date')
+    status = BooleanField(verbose_name='status')
 
     class Meta:
-        database = db
+        database = get_db()
 
 if __name__ == '__main__':
-    db.create_tables([Product, Payment])
+    get_db().create_tables([Item, Payment])
 
-    product1 = Product(name='Mars', type='Chocolate bar', image_url='', price=3.2)
+    product1 = Item(title='Mars', price=3.2, category='Chocolate bar', image_url='', description='')
     product1.save()
-    #
-    # user2 = User.create(first_name='Peter', last_name='Folin', age=30, is_ill=True)
-
-    # for user in User.select():
-    #     print(user.first_name, user.last_name)
