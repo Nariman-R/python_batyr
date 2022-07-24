@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends
 from typing import List
 
@@ -81,3 +81,13 @@ def create_payment(payment_body: PaymentRequestSchema) -> dict:
     response = PaymentResponseSchema.from_orm(payment)
 
     return response.dict()
+
+
+@app.get("/payments/{days}", response_model=List[PaymentResponseSchema])
+def get_payments_list(days: int):
+    start_day = datetime.now() - timedelta(days=days)
+    payments_list = Payment.select().where(Payment.date >= start_day)
+
+    response = [PaymentResponseSchema.from_orm(item) for item in payments_list]
+
+    return response
