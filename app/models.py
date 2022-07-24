@@ -16,7 +16,8 @@ class Item(Model):
 class Payment(Model):
     item = ForeignKeyField(Item, verbose_name='item', backref='items')
     date = DateTimeField(verbose_name='date')
-    status = BooleanField(verbose_name='status')
+    status = CharField(verbose_name='status', default='new')
+    is_issued = BooleanField(verbose_name="Error or not", default=False)
 
     class Meta:
         database = get_db()

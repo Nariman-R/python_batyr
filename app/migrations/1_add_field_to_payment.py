@@ -13,5 +13,5 @@ migrator = PostgresqlMigrator(db)
 
 if __name__ == "__main__":
     migrate(
-        migrator.add_column('payment', 'is_issued', BooleanField(verbose_name="Есть ошибка или нет", default=False)),
+        migrator.add_column('payment', 'is_issued', BooleanField(verbose_name="Error or not", default=False)),
     )
