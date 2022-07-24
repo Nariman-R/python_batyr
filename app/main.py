@@ -47,9 +47,9 @@ def delete_item(item_id: int):
     return {'operation result': 'record deleted'}
 
 
-@app.patch("/items/")
-def update_item(item_body: ItemUpdateSchema):
-    item_to_update = Item.get_by_id(item_body.id)
+@app.patch("/items/{item_id}")
+def update_item(item_id: int, item_body: ItemUpdateSchema):
+    item_to_update = Item.get_by_id(item_id)
     item_to_update.title = item_body.title
     item_to_update.price = item_body.price
     item_to_update.category = item_body.category

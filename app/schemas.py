@@ -24,12 +24,11 @@ class ItemResponseSchema(ItemRequestSchema):
 
 
 class ItemUpdateSchema(BaseModel):
-    id: int
-    title: str
-    price: float
-    category: str
-    image_url: str
-    description: str
+    title: Optional[str]
+    price: Optional[float]
+    category: Optional[str]
+    image_url: Optional[str]
+    description: Optional[str]
 
 
 class PaymentRequestSchema(BaseModel):
