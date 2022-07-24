@@ -83,6 +83,17 @@ def create_payment(payment_body: PaymentRequestSchema) -> dict:
     return response.dict()
 
 
+@app.post("/payments/{payment_id}", response_model=PaymentResponseSchema)
+def create_payment(payment_id: int, payment_body: PaymentRequestSchema) -> dict:
+    payment_to_update = Payment.get_by_id(payment_id)
+    payment_to_update.status = payment_body.status
+    payment_to_update.is_issued = payment_body.is_issued
+
+    response = PaymentResponseSchema.from_orm(payment_to_update)
+
+    return response.dict()
+
+
 @app.get("/payments/{days}", response_model=List[PaymentResponseSchema])
 def get_payments_list(days: int):
     start_day = datetime.now() - timedelta(days=days)

@@ -32,7 +32,7 @@ class ItemUpdateSchema(BaseModel):
 
 
 class PaymentRequestSchema(BaseModel):
-    item_id: int
+    item_id: Optional[int]
     date: Optional[datetime]
     status: Optional[str]
     is_issued: Optional[bool]
