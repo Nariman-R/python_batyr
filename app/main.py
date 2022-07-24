@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends
 from datetime import datetime
+from fastapi import FastAPI, Depends
+from typing import List
 
 from app.dependencies import get_db
 from app.schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
@@ -15,7 +16,7 @@ def health() -> dict:
     return {'status': 'ok'}
 
 
-@app.get("/items/{item_id}")
+@app.get("/items/{item_id}", response_model=ItemResponseSchema)
 def get_item(item_id: int) -> dict:
     item = Item.get_by_id(item_id)
 
@@ -24,8 +25,17 @@ def get_item(item_id: int) -> dict:
     return response.dict()
 
 
-@app.post("/items")
-def create_item(item_body: ItemRequestSchema) -> dict:
+@app.get("/items/", response_model=List[ItemResponseSchema])
+def get_items_list():
+    items_list = Item.select()
+
+    response = [ItemResponseSchema.from_orm(item) for item in items_list]
+
+    return response
+
+
+@app.post("/items", response_model=ItemResponseSchema)
+def create_items(item_body: ItemRequestSchema) -> dict:
     item = Item.create(
         title=item_body.title,
         price=item_body.price,
