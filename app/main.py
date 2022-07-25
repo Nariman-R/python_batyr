@@ -6,6 +6,7 @@ from app.dependencies import get_db, get_queue
 from app.schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
 from app.schemas import PaymentResponseSchema, PaymentRequestSchema
 from app.models import Item, Payment
+from app.tasks import fill_file_with_hw
 
 
 app = FastAPI(dependencies=[Depends(get_db)])
