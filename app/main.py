@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends
 from typing import List
 
-from app.dependencies import get_db
+from app.dependencies import get_db, get_queue
 from app.schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
 from app.schemas import PaymentResponseSchema, PaymentRequestSchema
 from app.models import Item, Payment
@@ -60,6 +60,7 @@ def delete_item(item_id: int):
 @app.patch("/items/{item_id}")
 def update_item(item_id: int, item_body: ItemUpdateSchema):
     item_to_update = Item.get_by_id(item_id)
+
     item_to_update.title = item_body.title
     item_to_update.price = item_body.price
     item_to_update.category = item_body.category
@@ -102,3 +103,11 @@ def get_payments_list(days: int):
     response = [PaymentResponseSchema.from_orm(item) for item in payments_list]
 
     return response
+
+
+@app.post("/run-task")
+def run_task():
+    queue = get_queue()
+    queue.enqueue(fill_file_with_hw)
+
+    return {}
