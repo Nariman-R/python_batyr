@@ -84,6 +84,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "croniter"
+version = "1.3.5"
+description = "croniter provides iteration for datetime object with cron like format"
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+python-dateutil = "*"
+
+[[package]]
 name = "deprecated"
 version = "1.2.13"
 description = "Python @deprecated decorator to deprecate old python classes, functions or methods."
@@ -269,6 +280,17 @@ tomli = ">=1.0.0"
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
+name = "python-dateutil"
+version = "2.8.2"
+description = "Extensions to the standard Python datetime module"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
 name = "python-dotenv"
 version = "0.20.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -325,6 +347,27 @@ python-versions = ">=3.5"
 [package.dependencies]
 click = ">=5.0.0"
 redis = ">=3.5.0"
+
+[[package]]
+name = "rq-scheduler"
+version = "0.11.0"
+description = "Provides job scheduling capabilities to RQ (Redis Queue)"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+croniter = ">=0.3.9"
+python-dateutil = "*"
+rq = ">=0.13"
+
+[[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "sniffio"
@@ -404,7 +447,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.10"
-content-hash = "e20e4197fe7a6ee6c5676bff0453d0254dbad3300202fbacba6fc5b9845ca77e"
+content-hash = "aa66fac701f93b4168781324819e6913df31626dda9d02c3b103afdab8be8f9f"
 
 [metadata.files]
 anyio = [
@@ -418,6 +461,7 @@ certifi = []
 charset-normalizer = []
 click = []
 colorama = []
+croniter = []
 deprecated = []
 environs = []
 fastapi = []
@@ -472,10 +516,13 @@ pydantic = [
 ]
 pyparsing = []
 pytest = []
+python-dateutil = []
 python-dotenv = []
 redis = []
 requests = []
 rq = []
+rq-scheduler = []
+six = []
 sniffio = [
     {file = "sniffio-1.2.0-py3-none-any.whl", hash = "sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663"},
     {file = "sniffio-1.2.0.tar.gz", hash = "sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de"},
