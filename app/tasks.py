@@ -18,7 +18,8 @@ def check_payment():
     print(payment_lifetime, payment.status)
     if payment_lifetime < datetime.now():
       payment.status = 'not paid'
-      
+      payment.save()
+
 
 if __name__ == '__main__':
     fill_file_with_hw()
