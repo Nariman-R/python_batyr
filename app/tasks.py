@@ -15,7 +15,7 @@ def check_payment():
 
   for payment in new_payment_list:
     payment_lifetime = payment.date + timedelta(seconds=PURCHASE_TIME_LIMIT)
-    if payment_lifetime > datetime.now():
+    if payment_lifetime < datetime.now():
       payment.status = 'not paid'
 
 if __name__ == '__main__':
