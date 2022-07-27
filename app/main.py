@@ -3,12 +3,14 @@ from fastapi import FastAPI, Depends
 from typing import List
 
 from dependencies import get_db, get_queue
+from scheduler import create_scheduler
 from schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
 from schemas import PaymentResponseSchema, PaymentRequestSchema, PaymentIssuedRequestSchema
 from models import Item, Payment
 from tasks import fill_file_with_hw, check_payment
 
-app = FastAPI(dependencies=[Depends(get_db)])
+app = FastAPI(dependencies=[Depends(get_db)],
+              on_startup=[create_scheduler])
 
 
 @app.get('/health')
