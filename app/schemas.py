@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel, validator
 from typing import Optional
 
-from app.models import Item
+from models import Item
 
 
 MAX_PRICE = 10000

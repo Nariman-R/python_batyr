@@ -2,11 +2,11 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends
 from typing import List
 
-from app.dependencies import get_db, get_queue
-from app.schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
-from app.schemas import PaymentResponseSchema, PaymentRequestSchema
-from app.models import Item, Payment
-from app.tasks import fill_file_with_hw
+from dependencies import get_db, get_queue
+from schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
+from schemas import PaymentResponseSchema, PaymentRequestSchema
+from models import Item, Payment
+from tasks import fill_file_with_hw, check_payment
 
 
 app = FastAPI(dependencies=[Depends(get_db)])
@@ -110,5 +110,12 @@ def get_payments_list(days: int):
 def run_task():
     queue = get_queue()
     queue.enqueue(fill_file_with_hw)
+
+    return {}
+
+@app.post("/check-new-payment")
+def run_task():
+    queue = get_queue()
+    queue.enqueue(check_payment)
 
     return {}

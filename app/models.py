@@ -1,6 +1,6 @@
 from peewee import *
 
-from app.dependencies import get_db
+from dependencies import get_db
 
 
 class Item(Model):
