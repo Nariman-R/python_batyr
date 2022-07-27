@@ -50,3 +50,6 @@ class PaymentResponseSchema(PaymentRequestSchema):
 
     class Config:
         orm_mode = True
+
+class PaymentIssuedRequestSchema(BaseModel):
+    is_issued: bool

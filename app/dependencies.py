@@ -1,3 +1,5 @@
+import requests
+
 from peewee import *
 from environs import Env
 from redis import Redis
@@ -10,6 +12,9 @@ DATABASE_NAME = environment('DATABASE_NAME')
 DATABASE_URL = environment('DATABASE_URL')
 
 REDIS_URL = environment('REDIS_URL')
+
+STOCK_URL = 'https://www.w3schools.com/python/demopage.php'
+
 
 def get_db():
     db = PostgresqlDatabase(

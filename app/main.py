@@ -4,10 +4,9 @@ from typing import List
 
 from dependencies import get_db, get_queue
 from schemas import ItemRequestSchema, ItemResponseSchema, ItemUpdateSchema
-from schemas import PaymentResponseSchema, PaymentRequestSchema
+from schemas import PaymentResponseSchema, PaymentRequestSchema, PaymentIssuedRequestSchema
 from models import Item, Payment
 from tasks import fill_file_with_hw, check_payment
-
 
 app = FastAPI(dependencies=[Depends(get_db)])
 
@@ -37,13 +36,11 @@ def get_items_list():
 
 @app.post("/items", response_model=ItemResponseSchema)
 def create_items(item_body: ItemRequestSchema) -> dict:
-    item = Item.create(
-        title=item_body.title,
-        price=item_body.price,
-        category=item_body.category,
-        image_url=item_body.image_url,
-        description=item_body.description
-    )
+    item = Item.create(title=item_body.title,
+                       price=item_body.price,
+                       category=item_body.category,
+                       image_url=item_body.image_url,
+                       description=item_body.description)
 
     response = ItemResponseSchema.from_orm(item)
 
@@ -54,7 +51,7 @@ def create_items(item_body: ItemRequestSchema) -> dict:
 def delete_item(item_id: int):
     item_to_delete = Item.get_by_id(item_id)
     item_to_delete.delete_instance()
-    
+
     return {'operation result': 'record deleted'}
 
 
@@ -68,25 +65,24 @@ def update_item(item_id: int, item_body: ItemUpdateSchema):
     item_to_update.image_url = item_body.image_url
     item_to_update.description = item_body.description
     item_to_update.save()
-    
+
     return {'operation result': 'record updated'}
 
 
-@app.post("/payments", response_model=PaymentResponseSchema)
+@app.post("/payment", response_model=PaymentResponseSchema)
 def create_payment(payment_body: PaymentRequestSchema) -> dict:
-    payment = Payment.create(
-        item_id=payment_body.item_id,
-        date=datetime.now(),
-        status='new'
-    )
+    payment = Payment.create(item_id=payment_body.item_id,
+                             date=datetime.now(),
+                             status='new')
 
     response = PaymentResponseSchema.from_orm(payment)
 
     return response.dict()
 
 
-@app.post("/payments/{payment_id}", response_model=PaymentResponseSchema)
-def create_payment(payment_id: int, payment_body: PaymentRequestSchema) -> dict:
+@app.post("/payment/{payment_id}", response_model=PaymentResponseSchema)
+def update_payment(payment_id: int,
+                   payment_body: PaymentRequestSchema) -> dict:
     payment_to_update = Payment.get_by_id(payment_id)
     payment_to_update.status = payment_body.status
     payment_to_update.is_issued = payment_body.is_issued
@@ -94,6 +90,26 @@ def create_payment(payment_id: int, payment_body: PaymentRequestSchema) -> dict:
     response = PaymentResponseSchema.from_orm(payment_to_update)
 
     return response.dict()
+
+
+@app.post("/payment-paid/{payment_id}")
+def make_payment_paid(payment_id: int):
+    paid_payment = Payment.get_by_id(payment_id)
+    paid_payment.status = 'paid'
+    # send to stock payment_id
+
+    return {'operation result': 'payment processed'}
+
+
+@app.post("/payment-issued-status/{payment_id}")
+def set_payment_issued_status(payment_id: int,
+                              payment_issued_body: PaymentIssuedRequestSchema):
+    paid_payment = Payment.get_by_id(payment_id)
+    paid_payment.status = payment_issued_body.is_issued
+    # if NOT is_issued:
+    #   start process to return money
+
+    return {}
 
 
 @app.get("/payments/{days}", response_model=List[PaymentResponseSchema])
@@ -112,6 +128,7 @@ def run_task():
     queue.enqueue(fill_file_with_hw)
 
     return {}
+
 
 @app.post("/check-new-payment")
 def run_task():
