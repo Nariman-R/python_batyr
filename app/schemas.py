@@ -14,7 +14,12 @@ class ItemRequestSchema(BaseModel):
     category: str
     image_url: str
     description: str
-    
+
+    @validator("price")
+    def price_more_than_max(cls, value: float):
+        if value > MAX_PRICE:
+            raise ValueError('payment sum is more than 10 000')
+        return value
 
 class ItemResponseSchema(ItemRequestSchema):
     id: int
@@ -30,6 +35,11 @@ class ItemUpdateSchema(BaseModel):
     image_url: Optional[str]
     description: Optional[str]
 
+    @validator("price")
+    def price_more_than_max(cls, value: float):
+        if value > MAX_PRICE:
+            raise ValueError('payment sum is more than 10 000')
+        return value
 
 class PaymentRequestSchema(BaseModel):
     item_id: Optional[int]
@@ -37,12 +47,7 @@ class PaymentRequestSchema(BaseModel):
     status: Optional[str]
     is_issued: Optional[bool]
 
-    @validator("item_id")
-    def price_more_than_max(cls, value: int):
-        item_for_sell = Item.get_by_id(value)
-        if item_for_sell.price > MAX_PRICE:
-            raise ValueError('payment sum is more than 10 000')
-        return value
+
 
 
 class PaymentResponseSchema(PaymentRequestSchema):
