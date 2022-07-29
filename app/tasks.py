@@ -11,7 +11,7 @@ def fill_file_with_hw():
             file.write("Hello World\n")
 
 
-def check_payment():
+def check_payments():
     new_payment_list = Payment.select().where(Payment.status == "new")
 
     for payment in new_payment_list:
