@@ -89,7 +89,7 @@ def approve_payment(payment_id: int):
     paid_payment.save()
 
     queue = get_queue()
-    queue.enqueue(issue_paid_item(payment_id))
+    queue.enqueue(issue_paid_item, payment_id)
 
     return {"operation result": "payment processed"}
 
