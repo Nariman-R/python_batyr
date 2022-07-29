@@ -2,8 +2,6 @@ from datetime import datetime
 from pydantic import BaseModel, validator
 from typing import Optional
 
-from models import Item
-
 
 MAX_PRICE = 10000
 
@@ -20,6 +18,7 @@ class ItemRequestSchema(BaseModel):
         if value > MAX_PRICE:
             raise ValueError('payment sum is more than 10 000')
         return value
+
 
 class ItemResponseSchema(ItemRequestSchema):
     id: int
@@ -41,13 +40,12 @@ class ItemUpdateSchema(BaseModel):
             raise ValueError('payment sum is more than 10 000')
         return value
 
+
 class PaymentRequestSchema(BaseModel):
     item_id: Optional[int]
     date: Optional[datetime]
     status: Optional[str]
     is_issued: Optional[bool]
-
-
 
 
 class PaymentResponseSchema(PaymentRequestSchema):
