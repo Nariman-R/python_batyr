@@ -1,17 +1,16 @@
-from peewee import *
 from environs import Env
 from redis import Redis
 from rq import Queue
+from peewee import *
+
 
 environment = Env()
 environment.read_env()
 
-DATABASE_NAME = environment('DATABASE_NAME')
-DATABASE_URL = environment('DATABASE_URL')
+DATABASE_NAME = environment("DATABASE_NAME")
+DATABASE_URL = environment("DATABASE_URL")
 
-REDIS_URL = environment('REDIS_URL')
-
-STOCK_URL = 'https://www.w3schools.com/python/demopage.php'
+REDIS_URL = environment("REDIS_URL")
 
 
 def get_db():
