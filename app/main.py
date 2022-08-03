@@ -61,11 +61,9 @@ def delete_item(item_id: int):
 def update_item(item_id: int, item_body: ItemUpdateSchema):
     item_to_update = Item.get_by_id(item_id)
 
-    item_to_update.title = item_body.title
-    item_to_update.price = item_body.price
-    item_to_update.category = item_body.category
-    item_to_update.image_url = item_body.image_url
-    item_to_update.description = item_body.description
+    for key, value in item_body.dict(exclude_unset=True).items():
+        setattr(item_to_update, key, value)
+
     item_to_update.save()
 
     return {"operation result": "record updated"}
