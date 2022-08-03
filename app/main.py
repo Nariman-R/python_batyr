@@ -18,7 +18,7 @@ def health() -> dict:
     return {"status": "ok"}
 
 
-@app.get("/get-item/{item_id}", response_model=ItemResponseSchema)
+@app.get("/items/{item_id}", response_model=ItemResponseSchema)
 def get_item(item_id: int) -> dict:
     item = Item.get_by_id(item_id)
 
@@ -27,7 +27,7 @@ def get_item(item_id: int) -> dict:
     return response.dict()
 
 
-@app.get("/get-items-list", response_model=List[ItemResponseSchema])
+@app.get("/items", response_model=List[ItemResponseSchema])
 def get_items_list():
     items_list = Item.select()
 
@@ -36,7 +36,7 @@ def get_items_list():
     return response
 
 
-@app.post("/create-item", response_model=ItemResponseSchema)
+@app.post("/items", response_model=ItemResponseSchema)
 def create_item(item_body: ItemRequestSchema) -> dict:
     item = Item.create(title=item_body.title,
                        price=item_body.price,
@@ -49,7 +49,7 @@ def create_item(item_body: ItemRequestSchema) -> dict:
     return response.dict()
 
 
-@app.delete("/delete-item/{item_id}")
+@app.delete("/items/{item_id}")
 def delete_item(item_id: int):
     item_to_delete = Item.get_by_id(item_id)
     item_to_delete.delete_instance()
@@ -57,7 +57,7 @@ def delete_item(item_id: int):
     return {"operation result": "record deleted"}
 
 
-@app.patch("/update-item/{item_id}")
+@app.patch("/items/{item_id}")
 def update_item(item_id: int, item_body: ItemUpdateSchema):
     item_to_update = Item.get_by_id(item_id)
 
@@ -69,7 +69,7 @@ def update_item(item_id: int, item_body: ItemUpdateSchema):
     return {"operation result": "record updated"}
 
 
-@app.post("/create-payment", response_model=PaymentResponseSchema)
+@app.post("/payments", response_model=PaymentResponseSchema)
 def create_payment(payment_body: PaymentRequestSchema) -> dict:
     payment = Payment.create(item_id=payment_body.item_id,
                              date=datetime.now(),
@@ -80,7 +80,7 @@ def create_payment(payment_body: PaymentRequestSchema) -> dict:
     return response.dict()
 
 
-@app.post("/approve-payment/{payment_id}")
+@app.post("/payments/{payment_id}")
 def approve_payment(payment_id: int):
     paid_payment = Payment.get_by_id(payment_id)
     paid_payment.status = "paid"
@@ -92,7 +92,7 @@ def approve_payment(payment_id: int):
     return {"operation result": "payment processed"}
 
 
-@app.get("/get-payments-list/{days}", response_model=List[PaymentResponseSchema])
+@app.get("/payments/{days}", response_model=List[PaymentResponseSchema])
 def get_payments_list(days: int):
     start_day = datetime.now() - timedelta(days=days)
     payments_list = Payment.select().where(Payment.date >= start_day)
